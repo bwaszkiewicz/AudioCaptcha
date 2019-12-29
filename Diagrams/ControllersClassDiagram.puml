@@ -1,0 +1,306 @@
+@startuml
+
+
+
+ViewController <|-- CaptchaController
+ViewController <|-- CaptchaViewController
+
+CaptchaViewController *-- AudioThreadHandler
+CaptchaController *-- AudioThreadHandler
+
+CaptchaController-- CodeGenerator
+CaptchaViewController o-- CodeGenerator
+
+CaptchaController o-- Configuration
+CaptchaViewController o-- Configuration
+CodeGenerator o-- Configuration
+ColorGenerator o-- Configuration
+
+CaptchaViewController o-- CaptchaRenderer
+
+CaptchaRenderer *-- ColorGenerator
+CaptchaRenderer o-- BackgroundFactory : <<use>>
+CaptchaRenderer o-- TextImgFactory : <<use>>
+CaptchaRenderer o-- NoiseProducer
+
+CodeGenerator *-- CharType
+
+
+interface ViewController{
+void init()
+Boolean isChecked()
+void clean()
+
+void refresh()
+void play()
+void submit()
+void submit(String code)
+}
+
++class AudioThreadHandler{
+
+-Context context
+-Button playButton
+
+-TextToSpeech mTextToSpeech
+-MediaPlayer player
+-String code
+-Thread speakThread
+
+-{static} Random RAND
+-Boolean isVoice
+-Boolean isStopVoice
+
++AudioThreadHandler(Context context, TextToSpeech TextToSpeech, String code, Button playButton)
++void play()
++void stop()
+-File createTempOutputFile()
+-void saveNoiseToFile()
++Boolean getVoice()
+}
+
++class CaptchaController{
+
+-View activityView
+-TextToSpeech mTextToSpeech
+-String code
+-Boolean isChecked
+
++CaptchaController(View activityView, Configuration configuration)
++void init()
++Boolean isChecked()
++void clean()
++void refresh()
++void play()
++void submit()
++void submit(String code)
+
+-void checkAudio()
+}
+
++class CaptchaViewController{
+
+-View captchaLayout
+-ImageView imageView
+-EditText inputEditText
+-Button submitButton
+-Button refreshButton
+-Button playButton
+
+-{static}Random RAND
+-TextToSpeech mTextToSpeech
+
+-String code
+-Boolean isChecked
+
++ CaptchaViewController(View layout, Configuration configuration)
++void init()
+#void onDestroy()
++Boolean isChecked()
++void clean()
++void refresh()
++void play()
++void submit()
++void submit(String code)
+
+-void draw()
+-void initMixVersion()
+-void initTextVersion()
+-void initAudioVersion()
+-TextImgType drawTextImageType()
+-void checkAudio()
+-Boolean isUseOnlyNumbers()
+-Boolean isUseOnlyUpperCase()
+
+}
+
++class CodeGenerator{
+
+-{static}Random RAND
+-{static}CodeGenerator instance
+
+-CodeGenerator()
++{static} CodeGenerator getInstance()
++String generateUpperString()
++String generateLowerString()
++Integer generateInt()
+
++String getSequence()
+
+
+}
+
+-enum CharType{
+    UpperCase
+    LowerCase
+    Digit
+}
+
++class CaptchaRenderer{
+
+-int width
+-int height
+-String code
+
++CaptchaRenderer(Context context, int width, int height, BackgroundType backgroundType, TextImgType textImgType, String code)
+#void onDraw(Canvas canvas)
+}
+
+interface BackgroundProducer{
++Canvas getBackground(int width, int height, Canvas canvas, int backgroundColor)
+}
+
++class BackgroundFactory{
++BackgroundProducer getBacgroundProducer(BackgroundType type)
+}
+
++enum BackgroundType{
+FLAT
+BLUR
+}
+
+BackgroundFactory -- BackgroundType
+BlurBackGroundProducer <.. BackgroundFactory : <<create>>
+FlatColorBackgroundProducer <.. BackgroundFactory : <<create>>
+BackgroundProducer <|-- BlurBackGroundProducer
+BackgroundProducer <|-- FlatColorBackgroundProducer
+
++class BlurBackGroundProducer{
++Canvas getBackground(int width, int height, Canvas canvas, int backgroundColor)
+}
+
++class FlatColorBackgroundProducer{
++Canvas getBackground(int width, int height, Canvas canvas, int TextColor)
+}
+
+TextImgFactory -- TextImgType
+BlurTextImgProducer <.. TextImgFactory : <<create>>
+DashTextImgProducer <.. TextImgFactory : <<create>>
+DefaultTextImgProducer <.. TextImgFactory : <<create>>
+HollowTextImgProducer <.. TextImgFactory : <<create>>
+TriangleTextImgProducer <.. TextImgFactory : <<create>>
+TextImgProducer <|-- BlurTextImgProducer
+TextImgProducer <|-- DashTextImgProducer
+TextImgProducer <|-- DefaultTextImgProducer
+TextImgProducer <|-- HollowTextImgProducer
+TextImgProducer <|-- TriangleTextImgProducer
+
++class TextImgFactory{
+}
+
++enum TextImgType{
+DEFAULT
+HOLLOW
+DASH
+ROOUND_DASH
+TRIANGLE
+BLUR
+}
+
++class BlurTextImgProducer{
+-{static}Random RAND
+
++Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+-BlurMaskFilter.Blur drawBlurType()
+-float sumArray(float[] array()
+}
+
++class DashTextImgProducer{
+-{static}Random RAND
+
++Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+-float sumArray(float[] array()
+}
+
++class DefaultTextImgProducer{
+-{static}Random RAND
+
++Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+-float sumArray(float[] array()
+}
+
++class HollowTextImgProducer{
+-{static}Random RAND
+
++Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+-float sumArray(float[] array()
+}
+
++class TriangleTextImgProducer{
+-{static}Random RAND
+
++Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+-Path getTriangle(float size)
+-float sumArray(float[] array()
+}
+
+interface TextImgProducer{
+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+}
+
+NoiseProducer <|-- RectangleNoiseProducer
+
+interface NoiseProducer{
+Canvas getNoise(int width, int height, Canvas canvas)
+}
+
++class RectangleNoiseProducer{
+-{static}Random RAND
++Canvas getNoise(int width, int height, Canvas canvas)
+}
+
++class ColorGenerator{
+
+-{static}Random RAND
+-{static}ColorGenerator instance
+
+-int backgroundColor
+-intTextColor
+
+-CodeGenerator()
++{static}ColorGenerator getInstance()
++void generateColor()
+-double checkContrastRatio(int backgroundColor, int textColor)
++int getBackgroundColor()
++int getTextColor()
+
+}
+
+Configuration *-- Version
+Configuration *-- Builder
+
+-class Configuration{
+    -{static} Configuration instance
+
+    -Double minColorContrastRatio
+    -double maxColorContrastRatio
+    -Integer codeLength
+    -Boolean generateLowerCases
+    -Boolean generateUpperCases
+    -Boolean generateNumbers
+    -Boolean useBlurTextFilter
+    -Boolean useDashTextFilter
+    -Boolean useDefaultTextFilter
+    -Boolean useHollowTextFilter
+    -Boolean useTriangleTextFilter
+    -Boolean useDynamicProcessingEffect
+    -Boolean usePresetReverbEffect
+    -Boolean useGUI
+    -Version useVersion
+
+    -Configuration()
+    +{static} getInstance()
+
+}
+
++class Builder{
++ Configuration build()
+}
+
++enum Version{
+audio
+text
+mix
+}
+
+@enduml

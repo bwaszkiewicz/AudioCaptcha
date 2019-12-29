@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/audioCaptcha"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/audioCaptchaHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:padding="2dp"
+        android:text="audioCaptcha" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/audioCaptchaInput"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Type code"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/audioCaptchaPlay"
+            android:layout_width="@dimen/ic_size"
+            android:layout_height="@dimen/ic_size"
+            android:layout_weight="1"
+            android:background="@drawable/ic_play" />
+
+
+        <Button
+            android:id="@+id/audioCaptchaSubmit"
+            android:layout_width="@dimen/ic_size"
+            android:layout_height="@dimen/ic_size"
+            android:layout_weight="1"
+            android:background="@drawable/ic_check" />
+
+        <Button
+            android:id="@+id/audioCaptchaRefresh"
+            android:layout_width="@dimen/ic_size"
+            android:layout_height="@dimen/ic_size"
+            android:layout_weight="1"
+            android:background="@drawable/ic_replay" />
+    </LinearLayout>
+</LinearLayout>

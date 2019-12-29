@@ -1,0 +1,27 @@
+@startuml
+scale 350 width
+
+state InitCaptcha{
+[*] --> ChooseVersion
+
+    state ChooseVersion {
+    }
+}
+
+state AudioVersion{
+
+}
+
+state TextVersion{
+
+}
+
+state MixVersion{
+
+}
+
+state NoGUIVersion{
+
+}
+
+@enduml

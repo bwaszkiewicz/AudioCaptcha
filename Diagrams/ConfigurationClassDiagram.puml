@@ -1,0 +1,42 @@
+@startuml
+
+Configuration *-- Version
+Configuration *-- Builder
+
+-class Configuration{
+    -{static} Configuration instance
+
+    -Double minColorContrastRatio
+    -double maxColorContrastRatio
+    -Integer codeLength
+    -Boolean generateLowerCases
+    -Boolean generateUpperCases
+    -Boolean generateNumbers
+    -Boolean useBlurTextFilter
+    -Boolean useDashTextFilter
+    -Boolean useDefaultTextFilter
+    -Boolean useHollowTextFilter
+    -Boolean useTriangleTextFilter
+    -Boolean useDynamicProcessingEffect
+    -Boolean usePresetReverbEffect
+    -Boolean useGUI
+    -Version useVersion
+
+    __
+
+    -Configuration()
+    +getInstance()
+
+}
+
++class Builder{
++ Configuration build()
+}
+
+enum Version{
+audio
+text
+mix
+}
+
+@enduml
