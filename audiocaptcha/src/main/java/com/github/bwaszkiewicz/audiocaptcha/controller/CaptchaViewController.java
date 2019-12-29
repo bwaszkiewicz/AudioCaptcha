@@ -173,7 +173,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS)
-                    result = mTextToSpeech.setLanguage(Locale.UK);
+                    result = mTextToSpeech.setLanguage(configuration.getUseSpeakLanguage());
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Log.e("TTS", "Language not supported");
                 } else {

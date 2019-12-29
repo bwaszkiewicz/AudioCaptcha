@@ -1,5 +1,7 @@
 package com.github.bwaszkiewicz.audiocaptcha;
 
+import java.util.Locale;
+
 public class Configuration {
 
     private static Configuration instance;
@@ -37,8 +39,9 @@ public class Configuration {
     private Boolean usePresetReverbEffect = true;
 
     private Boolean useGUI = true;
-
     private Version useVersion = Version.mix;
+
+    private Locale useSpeakLanguage = Locale.UK;
 
     public enum Version{
         audio,
@@ -64,8 +67,9 @@ public class Configuration {
         private Boolean usePresetReverbEffect = true;
 
         private Boolean useGUI = true;
-
         private Version useVersion = Version.mix;
+
+        private Locale useSpeakLanguage = Locale.UK;
 
         public Builder minColorContrastRatio(Double minColorContrastRatio) {
             this.minColorContrastRatio = minColorContrastRatio;
@@ -142,6 +146,11 @@ public class Configuration {
             return this;
         }
 
+        public Builder useSpeakLanguage(Locale useSpeakLanguage){
+            this.useSpeakLanguage = useSpeakLanguage;
+            return this;
+        }
+
         public Configuration build() {
             Configuration configuration = getInstance();
             configuration.generateUpperCases = this.generateUpperCases;
@@ -159,6 +168,7 @@ public class Configuration {
             configuration.usePresetReverbEffect = this.usePresetReverbEffect;
             configuration.useVersion = this.useVersion;
             configuration.useGUI = this.useGUI;
+            configuration.useSpeakLanguage = this.useSpeakLanguage;
             return configuration;
         }
     }
@@ -223,4 +233,6 @@ public class Configuration {
     public Boolean getUseGUI() {
         return useGUI;
     }
+
+    public Locale getUseSpeakLanguage() {return useSpeakLanguage;}
 }
