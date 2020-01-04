@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/audioCaptcha"
-        layout="@layout/mix_captcha_view"
+        layout="@layout/captcha_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,8 +19,8 @@
         app:layout_constraintVertical_bias="0.149" />
 
     <include
-        android:id="@+id/audioCaptcha2"
-        layout="@layout/mix_captcha_view"
+        android:id="@+id/audioCaptcha3"
+        layout="@layout/captcha_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,8 +31,8 @@
         app:layout_constraintVertical_bias="0.797" />
 
     <include
-        android:id="@+id/audioCaptcha3"
-        layout="@layout/mix_captcha_view"
+        android:id="@+id/audioCaptcha2"
+        layout="@layout/captcha_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
 
+import com.github.bwaszkiewicz.audiocaptcha.Configuration;
 import com.github.bwaszkiewicz.audiocaptcha.generator.ColorGenerator;
 import com.github.bwaszkiewicz.audiocaptcha.text.backgrounds.BackgroundProducer;
 import com.github.bwaszkiewicz.audiocaptcha.text.backgrounds.factory.BackgroundFactory;
@@ -20,13 +21,13 @@ public class CaptchaRenderer extends View {
     private int width;
     private int height;
 
-    private ColorGenerator colorGenerator = ColorGenerator.getInstance();
+    private ColorGenerator colorGenerator;
     private BackgroundProducer backgroundProducer;
     private TextImgProducer textImgProducer;
     private NoiseProducer noiseProducer;
     private String code;
 
-    public CaptchaRenderer(Context context, int width, int height, BackgroundType backgroundType, TextImgType textImgType, String code) {
+    public CaptchaRenderer(Context context, int width, int height, BackgroundType backgroundType, TextImgType textImgType, String code, Configuration configuration) {
         super(context);
         BackgroundFactory backgroundFactory = new BackgroundFactory();
         TextImgFactory textImgFactory = new TextImgFactory();
@@ -37,6 +38,7 @@ public class CaptchaRenderer extends View {
         this.textImgProducer = textImgFactory.getTextImgProducer(textImgType);
         this.noiseProducer = new RectangleNoiseProducer();
         this.code = code;
+        this.colorGenerator = ColorGenerator.getInstance(configuration);
 
     }
 

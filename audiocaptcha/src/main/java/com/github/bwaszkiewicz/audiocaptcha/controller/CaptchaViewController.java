@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.github.bwaszkiewicz.audiocaptcha.Configuration;
 import com.github.bwaszkiewicz.audiocaptcha.R;
+import com.github.bwaszkiewicz.audiocaptcha.audio.AudioVolume;
 import com.github.bwaszkiewicz.audiocaptcha.controller.AudioThread.AudioThreadHandler;
 import com.github.bwaszkiewicz.audiocaptcha.generator.CodeGenerator;
 import com.github.bwaszkiewicz.audiocaptcha.text.backgrounds.factory.BackgroundType;
@@ -65,7 +66,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         this.playButton = captchaLayout.findViewById(R.id.btn_play);
         this.configuration = configuration;
 
-        this.codeGenerator = CodeGenerator.getInstance();
+        this.codeGenerator = CodeGenerator.getInstance(configuration);
         code = codeGenerator.getSequence();
         draw();
     }
@@ -106,7 +107,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         if (audioThreadHandler == null || !audioThreadHandler.getVoice()) {
             checkAudio();
             playButton.setBackground(ContextCompat.getDrawable(captchaLayout.getContext(), R.drawable.ic_stop));
-            audioThreadHandler = new AudioThreadHandler(captchaLayout.getContext(), mTextToSpeech, code, playButton);
+            audioThreadHandler = new AudioThreadHandler(captchaLayout.getContext(), mTextToSpeech, code, playButton, configuration);
             audioThreadHandler.play();
         }
         else
@@ -118,11 +119,15 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         String test = this.code.replaceAll("\\s+", "");
         Log.println(Log.ERROR, TAG, "code: '" + test + "'");
         if (test.equals(inputEditText.getText().toString())) {
-            Toast.makeText(captchaLayout.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(captchaLayout.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            }
             captchaLayout.setVisibility(captchaLayout.GONE);
             isChecked = true;
         } else {
-            Toast.makeText(captchaLayout.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(captchaLayout.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -131,11 +136,15 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         String test = this.code.replaceAll("\\s+", "");
         Log.println(Log.ERROR, TAG, "code: '" + test + "'");
         if (test.equals(inputEditText.getText().toString())) {
-            Toast.makeText(captchaLayout.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(captchaLayout.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            }
             captchaLayout.setVisibility(captchaLayout.GONE);
             isChecked = true;
         } else {
-            Toast.makeText(captchaLayout.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(captchaLayout.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -158,7 +167,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
     }
 
     private void draw(){
-        View v = new CaptchaRenderer(imageView.getContext(), 200, 60, BackgroundType.FLAT, drawTextImageType(), code);
+        View v = new CaptchaRenderer(imageView.getContext(), 200, 60, BackgroundType.FLAT, drawTextImageType(), code, configuration);
         Bitmap bitmap = Bitmap.createBitmap(200,60, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
@@ -212,7 +221,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
     private void initTextVersion(){
         if(isUseOnlyNumbers()) inputEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        if(isUseOnlyUpperCase())inputEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        if(isUseOnlyUpperCase()) inputEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,17 +292,32 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         return textImgTypes.get(RAND.nextInt(textImgTypes.size()));
     }
 
-    private void checkAudio() {
-        AudioManager audio = (AudioManager) captchaLayout.getContext().getSystemService(Context.AUDIO_SERVICE);
+    @Override
+    public AudioVolume checkAudio() {
+        AudioManager audioManager = (AudioManager) captchaLayout.getContext().getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        Double currentVolumePercentage = 100.0 * currentVolume/maxVolume;
 
-        switch (audio.getStreamVolume(AudioManager.STREAM_MUSIC)) {
-            case 0:
-                Toast.makeText(captchaLayout.getContext(), "You have a muted sound.", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-                Toast.makeText(captchaLayout.getContext(), "You have very low volume.", Toast.LENGTH_SHORT).show();
-                break;
+        AudioVolume audioVolume;
+        if(currentVolumePercentage <=0){
+            audioVolume = AudioVolume.MUTE;
+        } else  if (currentVolumePercentage <= 10) audioVolume = AudioVolume.VERY_LOW;
+        else if (currentVolumePercentage <=25) audioVolume = AudioVolume.LOW;
+        else if (currentVolumePercentage <= 50) audioVolume = AudioVolume.NORMAL;
+        else audioVolume = AudioVolume.LOUD;
+
+        if(configuration.getUseToastMessage()) {
+            switch (audioVolume) {
+                case MUTE:
+                    Toast.makeText(captchaLayout.getContext(), "You have a muted sound.", Toast.LENGTH_SHORT).show();
+                    break;
+                case VERY_LOW:
+                    Toast.makeText(captchaLayout.getContext(), "You have very low volume.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
+        return audioVolume;
     }
 
     private Boolean isUseOnlyNumbers(){
@@ -301,7 +325,23 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
     }
 
     private Boolean isUseOnlyUpperCase(){
-        return !configuration.getGenerateLowerCases() && !configuration.getGenerateUpperCases();
+        return !configuration.getGenerateLowerCases() && configuration.getGenerateUpperCases();
+    }
+
+    @Override
+    public Button getSubmitBtn(){
+        return submitButton;
+    }
+
+    @Override
+    public Button getRefreshBtn() { return  refreshButton; }
+
+    @Override
+    public Button getPlayBtn() { return playButton; }
+
+    @Override
+    public EditText getInputEditText(){
+        return inputEditText;
     }
 
 }

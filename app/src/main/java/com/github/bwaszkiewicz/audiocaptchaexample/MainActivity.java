@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.bwaszkiewicz.audiocaptcha.AudioCaptcha;
 import com.github.bwaszkiewicz.audiocaptcha.Configuration;
@@ -66,10 +67,20 @@ public class MainActivity extends AppCompatActivity {
                 .usePresetReverbEffect(true)
                 .minColorContrastRatio(20.0)
                 .useVersion(Configuration.Version.text)
+                .useToastMessage(false)
                 .build();
 
         captcha2 = new AudioCaptcha(findViewById(R.id.audioCaptcha2), cnf);
-
+        captcha2.getSubmitButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captcha2.submit();
+                if(captcha2.getResult())
+                    Toast.makeText(getApplicationContext(), "Twoja odpowiedź jest poprawna", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "Twoja odpowiedź jest niepoprawna", Toast.LENGTH_SHORT).show();
+            }
+        });
         cnf = Configuration.builder()
                 .generateNumbers(true)
                 .generateLowerCases(false)

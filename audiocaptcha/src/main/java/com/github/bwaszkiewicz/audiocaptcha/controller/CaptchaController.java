@@ -5,9 +5,12 @@ import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.bwaszkiewicz.audiocaptcha.Configuration;
+import com.github.bwaszkiewicz.audiocaptcha.audio.AudioVolume;
 import com.github.bwaszkiewicz.audiocaptcha.controller.AudioThread.AudioThreadHandler;
 import com.github.bwaszkiewicz.audiocaptcha.generator.CodeGenerator;
 
@@ -31,7 +34,7 @@ public class CaptchaController implements ViewController {
         this.activityView = activityView;
         this.configuration = configuration;
 
-        this.codeGenerator = CodeGenerator.getInstance();
+        this.codeGenerator = CodeGenerator.getInstance(configuration);
         code = codeGenerator.getSequence();
 
     }
@@ -82,7 +85,7 @@ public class CaptchaController implements ViewController {
     public void play() {
         if (audioThreadHandler == null || !audioThreadHandler.getVoice()) {
             checkAudio();
-            audioThreadHandler = new AudioThreadHandler(activityView.getContext(), mTextToSpeech, code, null);
+            audioThreadHandler = new AudioThreadHandler(activityView.getContext(), mTextToSpeech, code, null, configuration);
             audioThreadHandler.play();
         }
         else
@@ -99,23 +102,58 @@ public class CaptchaController implements ViewController {
         String test = this.code.replaceAll("\\s+", "");
         Log.println(Log.ERROR, TAG, "code: '" + test + "'");
         if (test.equals(code)){
-            Toast.makeText(activityView.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(activityView.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+            }
             isChecked = true;
         } else {
-            Toast.makeText(activityView.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            if(configuration.getUseToastMessage()) {
+                Toast.makeText(activityView.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private void checkAudio() {
-        AudioManager audio = (AudioManager) activityView.getContext().getSystemService(Context.AUDIO_SERVICE);
+    @Override
+    public AudioVolume checkAudio() {
+        AudioManager audioManager = (AudioManager) activityView.getContext().getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        Double currentVolumePercentage = 100.0 * currentVolume/maxVolume;
 
-        switch (audio.getStreamVolume(AudioManager.STREAM_MUSIC)) {
-            case 0:
-                Toast.makeText(activityView.getContext(), "You have a muted sound.", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-                Toast.makeText(activityView.getContext(), "You have very low volume.", Toast.LENGTH_SHORT).show();
-                break;
+        AudioVolume audioVolume;
+        if(currentVolumePercentage <=0){
+            audioVolume = AudioVolume.MUTE;
+        } else  if (currentVolumePercentage <= 10) audioVolume = AudioVolume.VERY_LOW;
+            else if (currentVolumePercentage <=25) audioVolume = AudioVolume.LOW;
+            else if (currentVolumePercentage <= 50) audioVolume = AudioVolume.NORMAL;
+            else audioVolume = AudioVolume.LOUD;
+
+        if(configuration.getUseToastMessage()) {
+            switch (audioVolume) {
+                case MUTE:
+                    Toast.makeText(activityView.getContext(), "You have a muted sound.", Toast.LENGTH_SHORT).show();
+                    break;
+                case VERY_LOW:
+                    Toast.makeText(activityView.getContext(), "You have very low volume.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
+        return audioVolume;
     }
+    @Override
+    public Button getSubmitBtn(){
+        return null;
+    }
+
+    @Override
+    public Button getRefreshBtn() { return  null; }
+
+    @Override
+    public Button getPlayBtn() { return null; }
+
+    @Override
+    public EditText getInputEditText(){
+        return null;
+    }
+
 }

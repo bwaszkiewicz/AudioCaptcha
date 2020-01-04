@@ -20,16 +20,16 @@ public class ColorGenerator {
     private int backgroundColor;
     private int textColor;
 
-    private ColorGenerator() {
-        configuration = Configuration.getInstance();
+    private ColorGenerator(Configuration configuration) {
+        this.configuration = configuration;
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
         }
     }
 
-    public static ColorGenerator getInstance() {
+    public static ColorGenerator getInstance(Configuration configuration) {
         if (instance == null) {
-            instance = new ColorGenerator();
+            instance = new ColorGenerator(configuration);
         }
         return instance;
     }

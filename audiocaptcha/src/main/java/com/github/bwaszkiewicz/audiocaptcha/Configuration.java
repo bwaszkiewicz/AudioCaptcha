@@ -4,20 +4,20 @@ import java.util.Locale;
 
 public class Configuration {
 
-    private static Configuration instance;
-
-    private Configuration() {
-        if (instance != null) {
-            throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
-        }
-    }
-
-    public static Configuration getInstance() {
-        if (instance == null) {
-            instance = new Configuration();
-        }
-        return instance;
-    }
+//    private static Configuration instance;
+//
+//    private Configuration() {
+//        if (instance != null) {
+//            throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
+//        }
+//    }
+//
+//    public static Configuration getInstance() {
+//        if (instance == null) {
+//            instance = new Configuration();
+//        }
+//        return instance;
+//    }
 
     public static Builder builder() {
         return new Builder();
@@ -42,6 +42,7 @@ public class Configuration {
     private Version useVersion = Version.mix;
 
     private Locale useSpeakLanguage = Locale.UK;
+    private Boolean useToastMessage = true;
 
     public enum Version{
         audio,
@@ -70,6 +71,7 @@ public class Configuration {
         private Version useVersion = Version.mix;
 
         private Locale useSpeakLanguage = Locale.UK;
+        private Boolean useToastMessage = true;
 
         public Builder minColorContrastRatio(Double minColorContrastRatio) {
             this.minColorContrastRatio = minColorContrastRatio;
@@ -151,8 +153,13 @@ public class Configuration {
             return this;
         }
 
+        public Builder useToastMessage(Boolean useToastMessage){
+            this.useToastMessage = useToastMessage;
+            return this;
+        }
+
         public Configuration build() {
-            Configuration configuration = getInstance();
+            Configuration configuration = new Configuration();
             configuration.generateUpperCases = this.generateUpperCases;
             configuration.generateLowerCases = this.generateLowerCases;
             configuration.generateNumbers = this.generateNumbers;
@@ -169,6 +176,8 @@ public class Configuration {
             configuration.useVersion = this.useVersion;
             configuration.useGUI = this.useGUI;
             configuration.useSpeakLanguage = this.useSpeakLanguage;
+            configuration.useToastMessage = this.useToastMessage;
+
             return configuration;
         }
     }
@@ -235,4 +244,8 @@ public class Configuration {
     }
 
     public Locale getUseSpeakLanguage() {return useSpeakLanguage;}
+
+    public Boolean getUseToastMessage() {
+        return useToastMessage;
+    }
 }

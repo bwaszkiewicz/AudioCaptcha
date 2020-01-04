@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 
+import com.github.bwaszkiewicz.audiocaptcha.Configuration;
 import com.github.bwaszkiewicz.audiocaptcha.R;
 import com.github.bwaszkiewicz.audiocaptcha.audio.EffectsManager;
 
@@ -26,6 +27,7 @@ public class AudioThreadHandler {
     private MediaPlayer player;
     private String code;
     private Thread speakThread;
+    private Configuration configuration;
 
     private Button playButton;
 
@@ -35,11 +37,12 @@ public class AudioThreadHandler {
 
     private static final String TAG = AudioThreadHandler.class.getName();
 
-    public AudioThreadHandler(Context context, TextToSpeech textToSpeech, String code, Button playButton){
+    public AudioThreadHandler(Context context, TextToSpeech textToSpeech, String code, Button playButton, Configuration configuration){
         this.context = context;
         this.mTextToSpeech = textToSpeech;
         this.code = code;
         this.playButton = playButton;
+        this.configuration = configuration;
     }
 
     public void play(){
@@ -65,7 +68,7 @@ public class AudioThreadHandler {
                             isVoice = true;
                             player.start();
 
-                            EffectsManager manager = new EffectsManager(player.getAudioSessionId());
+                            EffectsManager manager = new EffectsManager(player.getAudioSessionId(), configuration);
                             manager.applayEffects();
 
                             player.setAuxEffectSendLevel(1.0f);

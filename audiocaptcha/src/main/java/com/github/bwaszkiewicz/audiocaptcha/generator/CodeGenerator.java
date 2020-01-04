@@ -14,16 +14,16 @@ public class CodeGenerator {
     private static CodeGenerator instance;
     private Configuration configuration;
 
-    private CodeGenerator() {
-        configuration = Configuration.getInstance();
+    private CodeGenerator(Configuration configuration) {
+        this.configuration = configuration;
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
         }
     }
 
-    public static CodeGenerator getInstance() {
+    public static CodeGenerator getInstance(Configuration configuration) {
         if (instance == null) {
-            instance = new CodeGenerator();
+            instance = new CodeGenerator(configuration);
         }
         return instance;
     }

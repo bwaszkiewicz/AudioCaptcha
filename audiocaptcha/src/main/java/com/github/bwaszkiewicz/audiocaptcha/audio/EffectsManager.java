@@ -8,9 +8,9 @@ public class EffectsManager {
     private Configuration configuration;
     int audioSessionId;
 
-    public EffectsManager(int audioSessionId){
+    public EffectsManager(int audioSessionId, Configuration configuration){
         this.audioSessionId = audioSessionId;
-        this.configuration= Configuration.getInstance();
+        this.configuration = configuration;
     }
 
     public void applayEffects(){

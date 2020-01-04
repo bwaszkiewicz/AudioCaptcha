@@ -35,19 +35,19 @@
             android:inputType="textPersonName" />
 
         <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="@dimen/ic_size"
+            android:layout_height="@dimen/ic_size"
+            android:layout_weight="1"
+            android:background="@drawable/ic_check" />
+
+        <Button
             android:id="@+id/btn_play"
             android:layout_width="@dimen/ic_size"
             android:layout_height="@dimen/ic_size"
             android:layout_weight="1"
             android:background="@drawable/ic_play" />
 
-
-        <Button
-            android:id="@+id/btn_submit"
-            android:layout_width="@dimen/ic_size"
-            android:layout_height="@dimen/ic_size"
-            android:layout_weight="1"
-            android:background="@drawable/ic_check" />
 
         <Button
             android:id="@+id/btn_refresh"

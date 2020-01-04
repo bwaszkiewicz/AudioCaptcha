@@ -37,14 +37,6 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
         findViewById(R.id.disability_activity).setOnTouchListener(this);
 
         Configuration cnf = Configuration.builder()
-                .generateNumbers(true)
-                .generateUpperCases(false)
-                .generateLowerCases(false)
-                .codeLength(4)
-                .useDynamicProcessingEffect(true)
-                .usePresetReverbEffect(true)
-                .minColorContrastRatio(20.0)
-                .useVersion(Configuration.Version.audio)
                 .useGUI(false)
                 .build();
 
