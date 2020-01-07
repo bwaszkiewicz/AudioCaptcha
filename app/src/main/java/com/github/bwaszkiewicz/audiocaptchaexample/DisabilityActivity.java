@@ -42,6 +42,8 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
 
         Configuration cnf = Configuration.builder()
                 .useGUI(false)
+                .generateLowerCases(false)
+                .generateUpperCases(false)
                 .build();
 
         captcha = new AudioCaptcha(findViewById(R.id.disability_activity), cnf);
