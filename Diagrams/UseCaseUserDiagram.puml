@@ -1,0 +1,49 @@
+@startuml
+:Użytkownik biblioteki: as User
+
+usecase DefineConfig as "Utwórz konfigurację"
+
+'usecase UseNumbers as "Wykorzystanie cyfr"
+'usecase UseLowerCases as "Wykorzystanie małych liter"
+'usecase UseUpperCases as "Wykorzystanie wielkich liter"
+'usecase NumberOfChars as "Zdefiniuj liczbę znaków"
+'usecase UseGUI as "Wykorzystaj interfejs graficzny"
+'usecase MinColorRation as "Ustal minimalny\nwspółczynnik kontrastu\nkolorów"
+'usecase MaxColorRation as "Ustal maksymalny\nwspółczynnik kontrastu\nkolorów"
+'usecase ToastMessage as "Użyj komunikatów Toast"
+'usecase SpeakLanguage as "Wybierz język TTS"
+
+usecase Version as "Wybór wersji"
+usecase AudioVersion as "Wersja audio"
+usecase TextVersion as "Wersja tekstowa"
+usecase MixVersion as "Wersja mieszana"
+
+usecase UseAPI as "Niestandardowa implementacja\nza pomocą API"
+
+
+User --> DefineConfig
+User --> Version
+User -> UseAPI
+
+Version ..> AudioVersion : <<include>>
+Version ..> TextVersion : <<include>>
+Version ..> MixVersion : <<include>>
+
+
+'DefineConfig .> UseNumbers : <<extends>
+'DefineConfig ..> UseLowerCases : <<extends>>
+'DefineConfig ...> UseUpperCases : <<extends>>
+'DefineConfig ...> NumberOfChars : <<extends>>
+'UseGUI <.. DefineConfig : <<extends>>
+'DefineConfig ...> MinColorRation : <<extends>>
+'DefineConfig ...> MaxColorRation : <<extends>>
+'ToastMessage <.. DefineConfig : <<extends>>
+'SpeakLanguage <. DefineConfig : <<extends>>
+
+
+note left of User
+    Programista
+    implementujący
+    bibliotekę.
+end note
+@enduml

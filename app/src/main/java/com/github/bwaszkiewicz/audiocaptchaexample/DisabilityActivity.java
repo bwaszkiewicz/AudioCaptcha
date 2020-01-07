@@ -3,6 +3,7 @@ package com.github.bwaszkiewicz.audiocaptchaexample;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.github.bwaszkiewicz.audiocaptcha.AudioCaptcha;
 import com.github.bwaszkiewicz.audiocaptcha.Configuration;
 
+import java.util.Locale;
+
 public class DisabilityActivity extends AppCompatActivity implements View.OnTouchListener, GestureDetector.OnGestureListener  {
 
     private static final String TAG = DisabilityActivity.class.getName();
@@ -20,6 +23,7 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
     private TextView tvCode;
     private String inputCode = "";
     private Integer counter=0;
+    private TextToSpeech mTextToSpeech;
 
     private GestureDetector gestureDetector;
     public static final int SWIPE_TRESHOLD = 100;
@@ -41,6 +45,22 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
                 .build();
 
         captcha = new AudioCaptcha(findViewById(R.id.disability_activity), cnf);
+
+
+        mTextToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            int result;
+
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS)
+                    result = mTextToSpeech.setLanguage(Locale.UK);
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Log.e("TTS", "Language not supported");
+                } else {
+                    Log.e("TTS", "Language supported");
+                }
+            }
+        });
 
     }
 
@@ -85,6 +105,7 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
             inputCode = "";
             tvCode.setText(inputCode);
         } else {
+            mTextToSpeech.speak(counter.toString(),TextToSpeech.QUEUE_ADD, null, null);
             inputCode += counter.toString();
             tvCode.setText(inputCode);
             counter = 0;
@@ -130,7 +151,15 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
     }
 
     private void onSwipeBottom(){
+
         captcha.submit(inputCode);
+
+        if(captcha.getResult()){
+            mTextToSpeech.speak("Success",TextToSpeech.QUEUE_ADD,null, null);
+        } else
+        {
+            mTextToSpeech.speak("Fail",TextToSpeech.QUEUE_ADD, null, null);
+        }
     }
 
     private void onSwipeTop(){

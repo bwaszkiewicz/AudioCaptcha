@@ -1,0 +1,84 @@
+@startuml
+
+Configuration *-- Version
+Configuration *- Builder
+
++class Configuration{
+    -minColorContrastRatio : Double
+    -maxColorContrastRatio : Double
+    -codeLength : Integer
+    -generateLowerCases : Boolean
+    -generateUpperCases : Boolean
+    -generateNumbers : Boolean
+    -useBlurTextFilter : Boolean
+    -useDashTextFilter : Boolean
+    -useDefaultTextFilter : Boolean
+    -useHollowTextFilter : Boolean
+    -useTriangleTextFilter : Boolean
+    -useDynamicProcessingEffect : Boolean
+    -usePresetReverbEffect : Boolean
+    -useGUI : Boolean
+    -useVersion : Version
+    -useSpeakLanguage : Locale
+    -useToastMessage : Boolean
+
+    __
+
+    +Configuration()
+    +{static}builder() : Builder
+
+}
+
+note bottom: Każde pole prywatne\nposiada metodę get()
+
++class Builder <<static>>{
+
+    -minColorContrastRatio : Double
+    -maxColorContrastRatio : Double
+    -codeLength : Integer
+    -generateLowerCases : Boolean
+    -generateUpperCases : Boolean
+    -generateNumbers : Boolean
+    -useBlurTextFilter : Boolean
+    -useDashTextFilter : Boolean
+    -useDefaultTextFilter : Boolean
+    -useHollowTextFilter : Boolean
+    -useTriangleTextFilter : Boolean
+    -useDynamicProcessingEffect : Boolean
+    -usePresetReverbEffect : Boolean
+    -useGUI : Boolean
+    -useVersion : Version
+    -useSpeakLanguage : Locale
+    -useToastMessage : Boolean
+
+
+    +minColorContrastRatio(minColorContrastRatio : Double) : Builder
+    +maxColorContrastRatio(maxColorContrastRatio : Double) : Builder
+    +codeLength(codeLength : Integer) : Builder
+    +generateLowerCases(generateLowerCases : Boolean) : Builder
+    +generateUpperCases(generateUpperCases : Boolean): Builder
+    +generateNumbers(generateNumbers : Boolean) : Builder
+    +useBlurTextFilter(useBlurTextFilter : Boolean) : Builder
+    +useDashTextFilter(useDashTextFilter : Boolean) : Builder
+    +useDefaultTextFilter(useDefaultTextFilter : Boolean) : Builder
+    +useHollowTextFilter(useHollowTextFilter : Boolean) : Builder
+    +useTriangleTextFilter(useTriangleTextFilter : Boolean) : Builder
+    +useDynamicProcessingEffect(useDynamicProcessingEffect : Boolean) : Builder
+    +usePresetReverbEffect(usePresetReverbEffect : Boolean) : Builder
+    +useGUI(useGUI : Boolean) : Builder
+    +useVersion(useVersion : Version) : Builder
+    +useSpeakLanguage(useSpeakLanguage : Locale) : Builder
+    +useToastMessage(useToastMessage : Boolean) : Builder
+
+    +build() : Configuration
+}
+
+enum Version{
+audio
+text
+mix
+}
+
+
+
+@enduml

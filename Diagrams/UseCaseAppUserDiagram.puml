@@ -1,0 +1,51 @@
+@startuml
+:Użytkownik aplikacji: as AppUser
+
+
+usecase PlayAudio as "Odtwarzanie audio"
+
+usecase StopAudio as "Zatrzymanie audio"
+
+usecase RefreshAudio as "Odśwież audio"
+
+usecase RefreshImg as "Odśwież obraz"
+
+usecase TypeAnsewer as "Wpisz kod odpowiedzi"
+
+usecase CheckAnswer as "Zweryfikuj odpowiedź"
+
+
+
+AppUser -> PlayAudio
+PlayAudio .> StopAudio : <<extends>
+AppUser --> RefreshAudio
+AppUser --> RefreshImg
+AppUser --> TypeAnsewer
+TypeAnsewer ..> CheckAnswer : <<extends>>
+
+
+
+
+note left of RefreshImg
+    Obraz - graficzna
+    reprezentacja testu
+    CAPTCHA
+end note
+
+note left of AppUser
+    Użytkownik
+    aplikacji z
+    zaimplementowaną
+    biblioteką.
+end note
+
+note "Audio - dźwiękowa\nreprezentacja testu\nCAPTCHA." as AudioNote
+(PlayAudio) .. AudioNote
+AudioNote .. (StopAudio)
+AudioNote .. (RefreshAudio)
+
+note "Wygeneruj nowe zadanie" as RefreshNote
+(RefreshImg) .. RefreshNote
+RefreshNote . (RefreshAudio)
+
+@enduml

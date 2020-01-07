@@ -4,21 +4,6 @@ import java.util.Locale;
 
 public class Configuration {
 
-//    private static Configuration instance;
-//
-//    private Configuration() {
-//        if (instance != null) {
-//            throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
-//        }
-//    }
-//
-//    public static Configuration getInstance() {
-//        if (instance == null) {
-//            instance = new Configuration();
-//        }
-//        return instance;
-//    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -78,7 +63,7 @@ public class Configuration {
             return this;
         }
 
-        public Builder maxColorContrastRation(Double maxColorContrastRatio) {
+        public Builder maxColorContrastRatio(Double maxColorContrastRatio) {
             this.maxColorContrastRatio = maxColorContrastRatio;
             return this;
         }

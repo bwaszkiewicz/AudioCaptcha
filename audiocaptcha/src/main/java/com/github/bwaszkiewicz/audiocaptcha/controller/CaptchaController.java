@@ -61,7 +61,7 @@ public class CaptchaController implements ViewController {
 
     @Override
     public Boolean isChecked() {
-        return null;
+        return isChecked;
     }
 
     @Override
