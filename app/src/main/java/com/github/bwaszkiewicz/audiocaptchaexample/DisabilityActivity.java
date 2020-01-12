@@ -44,6 +44,7 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
                 .useGUI(false)
                 .generateLowerCases(false)
                 .generateUpperCases(false)
+                .generateNumbers(true)
                 .build();
 
         captcha = new AudioCaptcha(findViewById(R.id.disability_activity), cnf);
@@ -106,6 +107,7 @@ public class DisabilityActivity extends AppCompatActivity implements View.OnTouc
         if(inputCode.length() > 3){
             inputCode = "";
             tvCode.setText(inputCode);
+            mTextToSpeech.speak("Clearing", TextToSpeech.QUEUE_ADD, null, null);
         } else {
             mTextToSpeech.speak(counter.toString(),TextToSpeech.QUEUE_ADD, null, null);
             inputCode += counter.toString();

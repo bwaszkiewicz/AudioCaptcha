@@ -1,30 +1,41 @@
 @startuml
 
-CaptchaRenderer o-- TextImgFactory : <<use>>
+CaptchaRenderer o- TextImgFactory : <<use>>
 
-TextImgFactory -- TextImgType
+TextImgFactory - TextImgType
 BlurTextImgProducer <.. TextImgFactory : <<create>>
 DashTextImgProducer <.. TextImgFactory : <<create>>
 DefaultTextImgProducer <.. TextImgFactory : <<create>>
 HollowTextImgProducer <.. TextImgFactory : <<create>>
 TriangleTextImgProducer <.. TextImgFactory : <<create>>
-TextImgProducer <|-- BlurTextImgProducer
-TextImgProducer <|-- DashTextImgProducer
-TextImgProducer <|-- DefaultTextImgProducer
-TextImgProducer <|-- HollowTextImgProducer
-TextImgProducer <|-- TriangleTextImgProducer
+TextImgProducer <|- BlurTextImgProducer
+TextImgProducer <|- DashTextImgProducer
+TextImgProducer <|--- DefaultTextImgProducer
+TextImgProducer <|- HollowTextImgProducer
+TextImgProducer <|- TriangleTextImgProducer
+
+abstract class View{
+}
+
+View <|-- CaptchaRenderer
 
 +class CaptchaRenderer{
 
--int width
--int height
--String code
+-width : int
+-height : int
+-code : String
+-colorGenerator : ColorGenerator
+-backgroundProducer : BackgroundProducer
+-textImgProducer : TextImgProducer
+-noiseProducer : NoiseProducer
+-code : String
 
-+CaptchaRenderer(Context context, int width, int height, BackgroundType backgroundType, TextImgType textImgType, String code)
-#void onDraw(Canvas canvas)
++CaptchaRenderer(context : Context, width : int, height : int, backgroundType : BackgroundType, textImgType : TextImgType, code : String)
+#onDraw(Canvas canvas) : void
 }
 
 +class TextImgFactory{
++ getTextImgProducer(type : TextImgType) : TextImgProducer
 }
 
 +enum TextImgType{
@@ -37,43 +48,43 @@ BLUR
 }
 
 +class BlurTextImgProducer{
--{static}Random RAND
+-{static}RAND : Random
 
-+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
--BlurMaskFilter.Blur drawBlurType()
--float sumArray(float[] array()
++Canvas getText(width : int, height : int, text : String, canvas : Canvas, textColor : int)
+-drawBlurType() BlurMaskFilter.Blur
+-sumArray(array : float[]) : float
 }
 
 +class DashTextImgProducer{
--{static}Random RAND
+-{static}RAND : Random
 
-+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
--float sumArray(float[] array()
++getText(width : int, height : int, text : String, canvas : Canvas, textColor : int) : Canvas
+-sumArray(array : float[]) : float
 }
 
 +class DefaultTextImgProducer{
--{static}Random RAND
+-{static}RAND : Random
 
-+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
--float sumArray(float[] array()
++getText(int width, int height, String text, Canvas canvas, int textColor) : Canvas
+-sumArray(array : float[]) : float
 }
 
 +class HollowTextImgProducer{
--{static}Random RAND
+-{static}RAND : Random
 
-+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
--float sumArray(float[] array()
++getText(width : int, height : int, text : String, canvas : Canvas, textColor : int) : Canvas
+-sumArray(array : float[]) : float
 }
 
 +class TriangleTextImgProducer{
--{static}Random RAND
+-{static}RAND : Random
 
-+Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
--Path getTriangle(float size)
--float sumArray(float[] array()
++getText(width : int, height : int, text : String, canvas : Canvas, textColor : int) : Canvas
+-getTriangle(size : float) : Path
+-sumArray(array : float[]) : float
 }
 
 interface TextImgProducer{
-Canvas getText(int width, int height, String text, Canvas canvas, int textColor)
+Canvas getText(width : int, height : int, text : String, canvas : Canvas, textColor : int)
 }
 @enduml

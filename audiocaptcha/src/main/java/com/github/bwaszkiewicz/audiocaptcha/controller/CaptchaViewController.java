@@ -66,7 +66,7 @@ public class CaptchaViewController extends AppCompatActivity implements ViewCont
         this.playButton = captchaLayout.findViewById(R.id.btn_play);
         this.configuration = configuration;
 
-        this.codeGenerator = CodeGenerator.getInstance(configuration);
+        this.codeGenerator = new CodeGenerator(configuration);
         code = codeGenerator.getSequence();
         draw();
     }

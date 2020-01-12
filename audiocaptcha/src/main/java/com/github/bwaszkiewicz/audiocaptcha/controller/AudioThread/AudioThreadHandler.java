@@ -66,11 +66,10 @@ public class AudioThreadHandler {
                     public void run() {
                         try {
                             isVoice = true;
-                            player.start();
 
                             EffectsManager manager = new EffectsManager(player.getAudioSessionId(), configuration);
                             manager.applayEffects();
-
+                            player.start();
                             player.setAuxEffectSendLevel(1.0f);
                             player.setLooping(true);
                             String[] sequence = code.split(" ");

@@ -12,7 +12,6 @@ import java.util.Random;
 public class ColorGenerator {
 
     private static final Random RAND = new SecureRandom();
-    private static final String TAG = ColorGenerator.class.getName();
 
     private static ColorGenerator instance;
     private Configuration configuration;
@@ -31,14 +30,12 @@ public class ColorGenerator {
         if (instance == null) {
             instance = new ColorGenerator(configuration);
         }
+        instance.setConfiguration(configuration);
         return instance;
     }
 
     public void generateColors() {
         backgroundColor = Color.argb(255, RAND.nextInt(255), RAND.nextInt(255), RAND.nextInt(255));
-
-        checkBackgroundSaturation(backgroundColor);
-
 
         double contrastRatio;
         do {
@@ -60,30 +57,6 @@ public class ColorGenerator {
 //        (L1 + 0.05) / (L2 + 0.05)
     }
 
-    private void checkBackgroundSaturation(int backgroundColor) {
-        int r, g, b;
-        r = (backgroundColor >> 16) & 0xff;
-        g = (backgroundColor >> 8) & 0xff;
-        b = backgroundColor & 0xff;
-
-        double luminosity = 0.5 * (maxRGB(r, g, b) / 255d + minRGB(r, g, b) / 255d);
-        double saturation=0;
-        if (luminosity < 1)
-            saturation = (maxRGB(r, g, b)/255d - minRGB(r,g,b)/255d) / (1 - Math.abs(2*luminosity -1));
-        if(luminosity == 1)
-            saturation = 0;
-
-        Log.println(Log.DEBUG, TAG, "Saturation = " + saturation);
-    }
-
-    private int maxRGB(int r, int g, int b) {
-        return Math.max(r, Math.max(g, b));
-    }
-
-    private int minRGB(int r, int g, int b) {
-        return Math.min(r, Math.min(g, b));
-    }
-
 
     public int getBackgroundColor() {
         return backgroundColor;
@@ -91,5 +64,9 @@ public class ColorGenerator {
 
     public int getTextColor() {
         return textColor;
+    }
+
+    private void setConfiguration(Configuration configuration){
+        this.configuration = configuration;
     }
 }

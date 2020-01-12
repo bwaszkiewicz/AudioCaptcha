@@ -34,7 +34,7 @@ public class CaptchaController implements ViewController {
         this.activityView = activityView;
         this.configuration = configuration;
 
-        this.codeGenerator = CodeGenerator.getInstance(configuration);
+        this.codeGenerator = new CodeGenerator(configuration);
         code = codeGenerator.getSequence();
 
     }
@@ -94,7 +94,7 @@ public class CaptchaController implements ViewController {
 
     @Override
     public void submit() throws Exception {
-        throw new Exception("Cannot use this method to no gui version");
+        throw new Exception("You cannot use this method for the controller version without GUI");
     }
 
     @Override

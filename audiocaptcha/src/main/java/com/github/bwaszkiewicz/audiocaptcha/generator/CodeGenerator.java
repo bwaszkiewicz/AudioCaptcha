@@ -11,21 +11,10 @@ public class CodeGenerator {
 
     private static final Random RAND = new SecureRandom();
 
-    private static CodeGenerator instance;
     private Configuration configuration;
 
-    private CodeGenerator(Configuration configuration) {
+    public CodeGenerator(Configuration configuration) {
         this.configuration = configuration;
-        if (instance != null) {
-            throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
-        }
-    }
-
-    public static CodeGenerator getInstance(Configuration configuration) {
-        if (instance == null) {
-            instance = new CodeGenerator(configuration);
-        }
-        return instance;
     }
 
     public String generateUpperString() {

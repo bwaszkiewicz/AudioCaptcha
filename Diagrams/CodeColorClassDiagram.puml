@@ -1,0 +1,20 @@
+@startuml
+
++class ColorGenerator {
+
+-{static}RAND : Random
+-{static}instance : ColorGenerator
+
+-configuration : Configuration
+-backgroundColor : int
+-textColor : int
+
+-ColorGenerator(configuration : Configuration)
++{static}getInstance(configuration : Configuration) : ColorGenerator
++generateColors() : void
++getBackgroundColor() : int
++getTextColor() : int
+-checkContrastRation(backgroundColor : int, textColor : int) : double
+-setConfiguration(configuration : Configuration) : void
+}
+@enduml

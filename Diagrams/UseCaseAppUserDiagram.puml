@@ -17,11 +17,11 @@ usecase CheckAnswer as "Zweryfikuj odpowiedź"
 
 
 AppUser -> PlayAudio
-PlayAudio .> StopAudio : <<extends>
+PlayAudio <. StopAudio : <<extends>
 AppUser --> RefreshAudio
 AppUser --> RefreshImg
 AppUser --> TypeAnsewer
-TypeAnsewer ..> CheckAnswer : <<extends>>
+TypeAnsewer <.. CheckAnswer : <<extends>>
 
 
 
