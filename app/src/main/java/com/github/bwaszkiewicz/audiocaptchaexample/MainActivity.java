@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 .generateNumbers(true)
                 .generateLowerCases(false)
                 .generateUpperCases(true)
-                .codeLength(4)
+                .codeLength(5)
                 .useTriangleTextFilter(true)
                 .useBlurTextFilter(false)
                 .useHollowTextFilter(true)
